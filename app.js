@@ -98,7 +98,7 @@ function showResult(event) {
             liEl.textContent = `${bussmall[i].busName} has ${bussmall[i].votes} votes and  ${bussmall[i].views} views.`;
         }
 
-        // btl.removeEventListener('click',showResult);
+        btl.removeEventListener('click',showResult);
       
 
     }
