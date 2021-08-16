@@ -10,14 +10,19 @@ let bussMallImages = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'bre
 let maxAttempts = 25;
 let attempt = 1;
 let bussmall = [];
-
+let shown =[]
+let votes1 = [];
+let views1 = [];
+let busNameimag=[];
 function BussMallImage(busName) {
     this.busName = busName.split('.')[0];
     this.bImg = `images/${busName}`;
     this.votes = 0;
     this.views = 0;
     bussmall.push(this);
+    busNameimag.push(this.busName);
 }
+console.log(busNameimag);
 
 for (let i = 0; i < bussMallImages.length; i++) {
     new BussMallImage(bussMallImages[i]);
@@ -36,9 +41,11 @@ function renderImg() {
     firstIndex = randomImage();
     secondIndex = randomImage();
     thirfIndex = randomImage();
-    while (firstIndex === secondIndex || firstIndex === thirfIndex || secondIndex === thirfIndex) {
+    while (firstIndex === secondIndex || firstIndex === thirfIndex || secondIndex === thirfIndex|| shown.includes(firstIndex) || shown.includes(secondIndex) || shown.includes(thirfIndex)) {
+   
         firstIndex = randomImage();
         secondIndex = randomImage();
+        thirfIndex=randomImage();
     }
     first.setAttribute('src', bussmall[firstIndex].bImg);
     second.setAttribute('src', bussmall[secondIndex].bImg);
@@ -46,6 +53,10 @@ function renderImg() {
     bussmall[firstIndex].views++;
     bussmall[secondIndex].views++;
     bussmall[thirfIndex].views++;
+    shown[0]=firstIndex;
+    shown[1]=secondIndex;
+    shown[2]=thirfIndex;
+    // console.log(shown);
 
 }
 renderImg();
@@ -73,6 +84,7 @@ function clickHandler(event) {
         first.removeEventListener('click', clickHandler);
         second.removeEventListener('click', clickHandler);
         third.removeEventListener('click', clickHandler);
+      
     }
 }
 // } else {
@@ -96,13 +108,53 @@ function showResult(event) {
             let liEl = document.createElement('li');
             result.appendChild(liEl);
             liEl.textContent = `${bussmall[i].busName} has ${bussmall[i].votes} votes and  ${bussmall[i].views} views.`;
+            votes1.push(bussmall[i].votes);
+            views1.push(bussmall[i].views);
         }
+        chartRender();
 
         btl.removeEventListener('click',showResult);
       
 
     }
-    console.log(attempt);
-    console.log(maxAttempts);
+    // console.log(attempt);
+    // console.log(maxAttempts);
     
+}
+function chartRender() {
+    let ctx = document.getElementById('myChart').getContext('2d');
+    let myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: busNameimag,
+            datasets: [{
+                label: '# of Votes',
+                data: votes1,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)'
+                ],
+                borderWidth: 1
+            }, {
+                label: '# of views',
+                data: views1,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
