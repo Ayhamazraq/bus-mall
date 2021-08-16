@@ -2,7 +2,7 @@
 
 
 footer{
-    position: fixed;
+    /* position: fixed; */
     clear: both;
      bottom: 0;
      left: 0;
@@ -18,13 +18,16 @@ footer{
     
     }
     body{
-        background-color:darksalmon;
+        /* background-color:darksalmon; */
+        background-color:rgb(192, 192, 192);
     }
     #image-container{
     height: 180px;
     border: 2px solid black;
     padding-top: 20px;
     margin-top: 30px;
+    width: 1500px;
+    margin-left: 3px;
 
     }
 
@@ -72,4 +75,11 @@ h1,p{
     border: 2px solid darkred;
 
   
+}
+canvas{
+    margin-bottom: 50px;
+}
+ul li {
+    background-color: darkseagreen;
+    margin: 10px;
 }
