@@ -7,13 +7,13 @@ let second = document.getElementById('second');
 let third = document.getElementById('third');
 let result = document.getElementById('results');
 let bussMallImages = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.jpg', 'bubblegum.jpg', 'chair.jpg', 'cthulhu.jpg', 'dog-duck.jpg', 'dragon.jpg', 'pen.jpg', 'pet-sweep.jpg', 'scissors.jpg', 'shark.jpg', 'sweep.png', 'tauntaun.jpg', 'unicorn.jpg', 'water-can.jpg', 'wine-glass.jpg'];
-let maxAttempts = 25;
+let maxAttempts = 5;
 let attempt = 1;
 let bussmall = [];
-let shown =[]
+let shown = []
 let votes1 = [];
 let views1 = [];
-let busNameimag=[];
+let busNameimag = [];
 function BussMallImage(busName) {
     this.busName = busName.split('.')[0];
     this.bImg = `images/${busName}`;
@@ -23,6 +23,7 @@ function BussMallImage(busName) {
     busNameimag.push(this.busName);
 }
 console.log(busNameimag);
+
 
 for (let i = 0; i < bussMallImages.length; i++) {
     new BussMallImage(bussMallImages[i]);
@@ -41,11 +42,11 @@ function renderImg() {
     firstIndex = randomImage();
     secondIndex = randomImage();
     thirfIndex = randomImage();
-    while (firstIndex === secondIndex || firstIndex === thirfIndex || secondIndex === thirfIndex|| shown.includes(firstIndex) || shown.includes(secondIndex) || shown.includes(thirfIndex)) {
-   
+    while (firstIndex === secondIndex || firstIndex === thirfIndex || secondIndex === thirfIndex || shown.includes(firstIndex) || shown.includes(secondIndex) || shown.includes(thirfIndex)) {
+
         firstIndex = randomImage();
         secondIndex = randomImage();
-        thirfIndex=randomImage();
+        thirfIndex = randomImage();
     }
     first.setAttribute('src', bussmall[firstIndex].bImg);
     second.setAttribute('src', bussmall[secondIndex].bImg);
@@ -53,13 +54,14 @@ function renderImg() {
     bussmall[firstIndex].views++;
     bussmall[secondIndex].views++;
     bussmall[thirfIndex].views++;
-    shown[0]=firstIndex;
-    shown[1]=secondIndex;
-    shown[2]=thirfIndex;
+    shown[0] = firstIndex;
+    shown[1] = secondIndex;
+    shown[2] = thirfIndex;
     // console.log(shown);
 
 }
 renderImg();
+
 
 first.addEventListener('click', clickHandler);
 second.addEventListener('click', clickHandler);
@@ -79,13 +81,15 @@ function clickHandler(event) {
         renderImg();
         console.log(bussmall);
         attempt++;
+        saveToLocalStorage();
     }
     else {
         first.removeEventListener('click', clickHandler);
         second.removeEventListener('click', clickHandler);
         third.removeEventListener('click', clickHandler);
-      
+
     }
+
 }
 // } else {
 
@@ -102,7 +106,8 @@ let btl = document.getElementById('bt1');
 btl.addEventListener('click', showResult)
 
 function showResult(event) {
-    if (attempt === maxAttempts +1) {
+
+    if (attempt === maxAttempts + 1) {
         for (let i = 0; i < bussmall.length; i++) {
 
             let liEl = document.createElement('li');
@@ -112,19 +117,20 @@ function showResult(event) {
             views1.push(bussmall[i].views);
         }
         chartRender();
+        saveToLocalStorage();
 
-        btl.removeEventListener('click',showResult);
-      
+        btl.removeEventListener('click', showResult);
+
 
     }
     // console.log(attempt);
     // console.log(maxAttempts);
-    
+
 }
 function chartRender() {
     let ctx = document.getElementById('myChart').getContext('2d');
     let myChart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: busNameimag,
             datasets: [{
@@ -158,3 +164,31 @@ function chartRender() {
         }
     });
 }
+function saveToLocalStorage() {
+    // console.log(views1,votes1);
+    let data = JSON.stringify(bussmall);
+ 
+
+    localStorage.setItem('bussmall', data);
+
+    
+}
+function readFromLocalStorage() {
+    let stringObj = localStorage.getItem('bussmall');
+   
+
+    let normalObj = JSON.parse(stringObj);
+  
+
+
+    if (normalObj) {
+        bussmall = normalObj;
+       
+
+        // renderviews1();
+        // chartRender();
+         renderImg();
+    }
+  
+}
+readFromLocalStorage();
